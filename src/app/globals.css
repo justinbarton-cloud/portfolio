@@ -6,8 +6,9 @@
  * by src/components/ThemeScript.tsx, so a theme or mode change is one
  * attribute and the whole page follows.
  *
- * One family sets everything, so a reader never has to adjust to a new face
- * mid page. Mono only appears where the subject is the tokens themselves.
+ * Body text is one family in every theme, so reading never changes. A theme
+ * may set headlines and labels in its own face, from the short list in
+ * content/themes.ts.
  */
 @theme {
   --color-paper: var(--surface);
@@ -19,6 +20,8 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-alt);
   --color-on-accent: var(--on-accent);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
   --font-sans: var(--ff-sans), system-ui, sans-serif;
   --font-mono: var(--ff-mono), ui-monospace, monospace;
   --radius-card: var(--radius);
@@ -38,22 +41,31 @@ body {
   font-optical-sizing: auto;
 }
 
-/* Headlines: the theme decides the weight and tracking, nothing else. */
+/* Headlines: the theme decides the face, weight and tracking. */
 .display {
+  font-family: var(--font-display), var(--ff-sans), system-ui, sans-serif;
   font-weight: var(--display-weight);
   letter-spacing: var(--display-tracking);
   line-height: 1.08;
   text-wrap: balance;
 }
 .hero-display {
-  font-size: clamp(42px, 6.2vw, 88px);
-  line-height: 1.02;
+  font-size: calc(var(--display-scale, 1) * clamp(42px, 6.2vw, 88px));
+  line-height: var(--display-leading, 1.02);
 }
 /* A short label over a section or a case: sentence case, in the accent. */
 .kicker {
-  font-size: 15px;
+  font-family: var(--font-label), var(--ff-sans), system-ui, sans-serif;
+  font-size: var(--label-size, 15px);
   font-weight: 600;
+  letter-spacing: var(--label-tracking, 0);
+  text-transform: var(--label-case, none);
   color: var(--accent);
+}
+/* Anything with .press answers the theme's press token while held: it lifts,
+   dims, sinks like a key, or inverts like e-ink. See themeCss(). */
+.press {
+  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
 }
 
 a {
@@ -121,6 +133,63 @@ html[data-theme="deck"] .motif::after {
   to { transform: translate3d(-12vmax, 8vmax, 0); }
 }
 
+/* Showroom: a floor that catches the light, and a slow sweep across it. */
+html[data-theme="showroom"] .motif {
+  background: linear-gradient(to top, var(--raised) 0, transparent 38vh);
+}
+html[data-theme="showroom"] .motif::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -40vw;
+  width: 40vw;
+  height: 30vh;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--ink) 5%, transparent), transparent);
+  animation: sweep 22s ease-in-out infinite;
+}
+@keyframes sweep {
+  from { transform: translateX(0); }
+  to { transform: translateX(180vw); }
+}
+
+/* Field: a brushed panel, and four encoders in the corner, turning. */
+html[data-theme="field"] .motif {
+  background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--ink) 3%, transparent) 0 1px, transparent 1px 3px);
+}
+html[data-theme="field"] .motif i:nth-child(-n + 4) {
+  --knob: var(--accent-alt);
+  display: block;
+  position: absolute;
+  right: 32px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 0 color-mix(in oklab, var(--ink) 30%, transparent);
+  animation: turn 14s linear infinite;
+}
+html[data-theme="field"] .motif i:nth-child(-n + 4)::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 10px;
+  width: 2px;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--surface);
+}
+html[data-theme="field"] .motif i:nth-child(1) { bottom: 136px; }
+html[data-theme="field"] .motif i:nth-child(2) { bottom: 100px; --knob: var(--ink-subtle); animation-duration: 19s; animation-direction: reverse; }
+html[data-theme="field"] .motif i:nth-child(3) { bottom: 64px; --knob: var(--action); animation-duration: 11s; }
+html[data-theme="field"] .motif i:nth-child(4) { bottom: 28px; --knob: var(--ink); animation-duration: 23s; animation-direction: reverse; }
+/* The encoders live in the right margin, so they go where there isn't one. */
+@media (max-width: 1360px) {
+  html[data-theme="field"] .motif i { display: none !important; }
+}
+@keyframes turn {
+  to { transform: rotate(360deg); }
+}
+
 /* Fall: a few leaves on their way down, in the accent's two ends. */
 .motif i {
   display: none;
@@ -162,7 +231,9 @@ html[data-theme="fall"] .motif i:nth-child(9) { left: 97%; animation-delay: -9s;
 @media (prefers-reduced-motion: reduce) {
   html[data-theme="fall"] .motif i { animation: none; display: none; }
   html[data-theme="deck"] .motif::before,
-  html[data-theme="deck"] .motif::after { animation: none; }
+  html[data-theme="deck"] .motif::after,
+  html[data-theme="showroom"] .motif::after,
+  html[data-theme="field"] .motif i { animation: none; }
   html { transition: none; }
 }
 

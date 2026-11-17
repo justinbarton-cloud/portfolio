@@ -27,7 +27,7 @@ export default function Home() {
           <p className="rise rise-3 mt-8 max-w-[34em] text-[20px] leading-relaxed text-ink-soft">{about.intro}</p>
           <Link
             href="/work/"
-            className="rise rise-4 mt-10 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-semibold text-paper transition hover:bg-accent hover:text-on-accent"
+            className="press rise rise-4 mt-10 inline-flex items-center gap-2 rounded-[min(var(--radius),999px)] bg-action px-6 py-3 text-[16px] font-semibold text-on-action hover:brightness-110"
           >
             See the work <span aria-hidden>→</span>
           </Link>
@@ -59,8 +59,9 @@ export default function Home() {
             <div className="lg:col-span-5">
               <h2 className="display text-[32px] text-ink sm:text-[40px]">This site runs on design tokens.</h2>
               <p className="mt-5 text-[18px] leading-relaxed text-ink-soft">
-                I built it the way I&rsquo;d build a product. Every page asks for its color, weight, corners and motion
-                by name, and each theme answers differently, in light and in dark. Pick one. The whole site follows.
+                I built it the way I&rsquo;d build a product. Every page asks for its color, type, corners and motion by
+                name, and each look answers differently, in light and in dark. Three borrow from products whose design
+                I admire. Pick the one that feels like yours. The whole site follows.
               </p>
             </div>
             <div className="lg:col-span-7">

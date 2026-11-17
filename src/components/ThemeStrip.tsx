@@ -1,5 +1,6 @@
 'use client'
 
+import { faces } from '../../content/themes'
 import { apply, originOf, useHtml, type Pref } from './Customize'
 import type { CustomizeTheme } from './customizeData'
 
@@ -12,7 +13,7 @@ export function ThemeStrip({ themes }: { themes: CustomizeTheme[] }) {
   const [themeId, mode, pref] = useHtml()
   return (
     <div>
-      <div role="radiogroup" aria-label="Theme" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div role="radiogroup" aria-label="Theme" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {themes.map((t) => {
           const m = pref === 'auto' ? (t.defaultMode === 'dark' ? 'dark' : mode) : pref
           const c = t.color[m]
@@ -24,12 +25,17 @@ export function ThemeStrip({ themes }: { themes: CustomizeTheme[] }) {
               role="radio"
               aria-checked={on}
               onClick={(e) => apply(themes, t.id, pref, originOf(e.currentTarget))}
-              className={`group flex aspect-[4/5] flex-col justify-between p-4 text-left transition ${on ? 'ring-2 ring-accent ring-offset-2 ring-offset-raised' : 'ring-1 ring-rule hover:-translate-y-0.5'}`}
+              className={`press group flex aspect-[5/4] flex-col justify-between p-4 text-left transition ${on ? 'ring-2 ring-accent ring-offset-2 ring-offset-raised' : 'ring-1 ring-rule hover:-translate-y-0.5'}`}
               style={{ background: c.surface, borderRadius: t.shape.radius }}
             >
               <span
                 className="text-[40px] leading-none"
-                style={{ color: c.ink, fontWeight: t.type.displayWeight, letterSpacing: t.type.displayTracking }}
+                style={{
+                  color: c.ink,
+                  fontFamily: `var(${faces[t.type.display].var})`,
+                  fontWeight: t.type.displayWeight,
+                  letterSpacing: t.type.displayTracking,
+                }}
               >
                 Aa
               </span>
@@ -37,6 +43,9 @@ export function ThemeStrip({ themes }: { themes: CustomizeTheme[] }) {
                 <span className="block h-1.5 w-10 rounded-full" style={{ background: `linear-gradient(90deg, ${c.accent}, ${c.accentAlt})` }} />
                 <span className="mt-3 block text-[15px] font-semibold" style={{ color: c.ink }}>
                   {t.name}
+                </span>
+                <span className="block text-[13px]" style={{ color: c.inkMuted }}>
+                  {t.inspiredBy ? `After ${t.inspiredBy.replace(' OP-1 field', '')}` : 'My own'}
                 </span>
               </span>
             </button>
@@ -52,7 +61,7 @@ export function ThemeStrip({ themes }: { themes: CustomizeTheme[] }) {
               role="radio"
               aria-checked={pref === p}
               onClick={(e) => apply(themes, themeId, p, originOf(e.currentTarget))}
-              className={`rounded-full px-4 py-1.5 text-[15px] capitalize transition ${pref === p ? 'bg-ink text-paper' : 'text-ink-soft hover:text-ink'}`}
+              className={`press rounded-full px-4 py-1.5 text-[15px] capitalize transition ${pref === p ? 'bg-ink text-paper' : 'text-ink-soft hover:text-ink'}`}
             >
               {p}
             </button>

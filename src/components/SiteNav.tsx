@@ -57,7 +57,7 @@ export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
           onClick={(e) => apply(themes, themeId || 'studio', mode === 'dark' ? 'light' : 'dark', originOf(e.currentTarget))}
           aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
-          className="ml-1 grid size-9 place-items-center rounded-full text-ink-soft ring-1 ring-rule transition hover:text-ink"
+          className="press ml-1 grid size-9 place-items-center rounded-full text-ink-soft ring-1 ring-rule transition hover:text-ink"
         >
           {mode === 'dark' ? (
             <svg viewBox="0 0 16 16" aria-hidden className="size-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
@@ -74,7 +74,7 @@ export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={open}
-          className="flex items-center gap-2 rounded-full py-1.5 pr-3.5 pl-2 text-[14px] text-ink-soft ring-1 ring-rule transition hover:text-ink"
+          className="press flex items-center gap-2 rounded-full py-1.5 pr-3.5 pl-2 text-[14px] text-ink-soft ring-1 ring-rule transition hover:text-ink"
         >
           <span aria-hidden className="grid grid-cols-2 gap-[2px]">
             {['var(--ink)', 'var(--accent)', 'var(--accent-alt)', 'var(--line)'].map((c, i) => (

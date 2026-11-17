@@ -11,8 +11,9 @@ import './globals.css'
 validate()
 
 /*
- * One family for everything, Atkinson Hyperlegible Next, picked for how
- * easily it reads, with its mono for the token names in Customize. Both are
+ * Body text is always Atkinson Hyperlegible Next, picked for how easily it
+ * reads, with its mono for the token names in Customize. Jost, Literata and
+ * Martian Mono set headlines in the looks that borrow from a product. All
  * self-hosted under the SIL Open Font License, so a build never reaches the
  * network.
  */
@@ -25,7 +26,11 @@ const atkinson = localFont({
   variable: '--ff-sans',
 })
 const atkinsonMono = localFont({ src: './fonts/AtkinsonHyperlegibleMono-latin.woff2', weight: '400 600', display: 'swap', variable: '--ff-mono' })
-const fonts = `${atkinson.variable} ${atkinsonMono.variable}`
+/* Headline faces for the looks that borrow from a product. Body text never uses them. */
+const jost = localFont({ src: './fonts/Jost-latin.woff2', weight: '300 700', display: 'swap', variable: '--ff-jost' })
+const literata = localFont({ src: './fonts/Literata-latin.woff2', weight: '300 800', display: 'swap', variable: '--ff-literata' })
+const martian = localFont({ src: './fonts/MartianMono-latin.woff2', weight: '300 700', display: 'swap', variable: '--ff-martian' })
+const fonts = [atkinson, atkinsonMono, jost, literata, martian].map((f) => f.variable).join(' ')
 
 export const metadata: Metadata = {
   title: { default: `${about.name}, design leader`, template: `%s · ${about.name}` },

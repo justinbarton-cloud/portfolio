@@ -19,16 +19,22 @@ https://justinbarton-cloud.github.io/portfolio/ on every push to main.
 ## Themes
 
 `content/themes.ts` holds the design tokens. Every theme answers the same
-semantic questions (color, headline weight and tracking, corner radius, and a
-background motif) in a light and a dark mode, and components only ask for the
-semantic name. The build checks every text color against its page, so a new
-theme that fails contrast fails `npm run check`.
+semantic questions (color, the main button, headline face and weight, label
+style, corner radius, what a press does, and a background motif) in a light
+and a dark mode, and components only ask for the semantic name. The build
+checks every text color against its page, so a new theme that fails contrast
+fails `npm run check`.
 
-Type is the same in every theme: Atkinson Hyperlegible Next, with its mono
-only for token names in Customize. A theme changes how heavy a headline is,
-never whether it's easy to read. Keep pages quiet: one idea per section,
-space between sections rather than rules, and motion only in the motifs, the
-page entrance and the theme switch. The fonts are OFL and listed in
+Showroom (after Tesla), Field (after Teenage Engineering's OP-1 field) and
+Paper (after reMarkable) borrow a feeling from a product, never a logo or an
+asset. They come from the looks in the POS design system's Lab, but the
+fonts were downloaded fresh from Google Fonts and no Toast code is copied.
+
+Body text is always Atkinson Hyperlegible Next. A theme may set headlines
+and labels in a face from `faces` in themes.ts, and only faces that read well
+big go on that list. Keep pages quiet: one idea per section, space between
+sections rather than rules, and motion only in the motifs, the page entrance,
+presses and the theme switch. The fonts are OFL and listed in
 `src/app/fonts/LICENSES.md`.
 
 ## Rules

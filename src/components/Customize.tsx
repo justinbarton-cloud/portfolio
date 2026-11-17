@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
-import { TYPE_FAMILY, type ColorTokens, type Mode } from '../../content/themes'
+import { faces, type ColorTokens, type Mode } from '../../content/themes'
 import type { CustomizeTheme } from './customizeData'
 import { MODE_KEY, THEME_KEY } from './ThemeScript'
 
@@ -85,6 +85,8 @@ const COLOR_ROWS: [keyof ColorTokens, string][] = [
   ['accent', 'color.accent'],
   ['accentAlt', 'color.accent.alt'],
   ['onAccent', 'color.on-accent'],
+  ['action', 'color.action'],
+  ['onAction', 'color.on-action'],
 ]
 
 export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[]; open: boolean; onClose: () => void }) {
@@ -105,10 +107,14 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
   if (!open) return null
   const rows: [string, string, string?][] = [
     ...COLOR_ROWS.map(([k, name]) => [name, c[k], c[k]] as [string, string, string]),
-    ['type.family', TYPE_FAMILY],
+    ['type.body', faces.atkinson.family],
+    ['type.display', faces[t.type.display].family],
     ['type.display.weight', String(t.type.displayWeight)],
     ['type.display.tracking', t.type.displayTracking],
+    ['type.display.leading', String(t.type.displayLeading)],
+    ['type.label', `${faces[t.type.label].family}${t.type.labelCaps ? ', caps' : ''}`],
     ['shape.radius', t.shape.radius],
+    ['interaction.press', t.press],
     ['motif', t.motif],
   ]
 
@@ -174,12 +180,17 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
                   role="radio"
                   aria-checked={on}
                   onClick={(e) => apply(themes, x.id, pref, originOf(e.currentTarget))}
-                  className={`overflow-hidden text-left transition ${on ? 'ring-2 ring-accent' : 'ring-1 ring-rule hover:ring-ink-faint'}`}
+                  className={`press overflow-hidden text-left transition ${on ? 'ring-2 ring-accent' : 'ring-1 ring-rule hover:ring-ink-faint'}`}
                   style={{ borderRadius: x.shape.radius, background: xc.surface }}
                 >
                   <div className="px-4 pt-4 pb-3">
                     <div
-                      style={{ fontWeight: x.type.displayWeight, letterSpacing: x.type.displayTracking, color: xc.ink }}
+                      style={{
+                        fontFamily: `var(${faces[x.type.display].var})`,
+                        fontWeight: x.type.displayWeight,
+                        letterSpacing: x.type.displayTracking,
+                        color: xc.ink,
+                      }}
                       className="text-[34px] leading-none"
                     >
                       Aa
@@ -192,6 +203,11 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
                   </div>
                   <div className="px-4 pb-4" style={{ color: xc.ink }}>
                     <div className="text-[14px] font-semibold">{x.name}</div>
+                    {x.inspiredBy ? (
+                      <div className="text-[12px]" style={{ color: xc.inkMuted }}>
+                        After {x.inspiredBy}
+                      </div>
+                    ) : null}
                     <div className="mt-0.5 text-[12px] leading-snug" style={{ color: xc.inkMuted }}>
                       {x.mood}
                     </div>
@@ -229,7 +245,7 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
           <button
             type="button"
             onClick={copy}
-            className="w-full rounded-full bg-ink py-2.5 text-[14px] font-semibold text-paper transition hover:bg-accent hover:text-on-accent"
+            className="press w-full rounded-[min(var(--radius),999px)] bg-action py-2.5 text-[14px] font-semibold text-on-action hover:brightness-110"
           >
             {copied ? 'Link copied' : 'Copy a link to this look'}
           </button>
