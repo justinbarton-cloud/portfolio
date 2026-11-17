@@ -5,6 +5,9 @@
  * content/themes.ts, written as CSS variables on <html data-theme data-mode>
  * by src/components/ThemeScript.tsx, so a theme or mode change is one
  * attribute and the whole page follows.
+ *
+ * One family sets everything, so a reader never has to adjust to a new face
+ * mid page. Mono only appears where the subject is the tokens themselves.
  */
 @theme {
   --color-paper: var(--surface);
@@ -16,7 +19,7 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-alt);
   --color-on-accent: var(--on-accent);
-  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-sans: var(--ff-sans), system-ui, sans-serif;
   --font-mono: var(--ff-mono), ui-monospace, monospace;
   --radius-card: var(--radius);
 }
@@ -28,42 +31,29 @@ html {
   transition: background-color 400ms ease, color 400ms ease;
 }
 body {
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 17px;
+  font-family: var(--ff-sans), system-ui, sans-serif;
+  font-size: 18px;
   line-height: 1.6;
   position: relative;
+  font-optical-sizing: auto;
 }
 
-/* Headlines take every typographic decision from the theme's tokens. */
+/* Headlines: the theme decides the weight and tracking, nothing else. */
 .display {
-  font-family: var(--font-display), Georgia, serif;
   font-weight: var(--display-weight);
   letter-spacing: var(--display-tracking);
-  /* The theme's leading, plus a little that only matters at small sizes, so a
-     118px headline sits tight and a 22px quote still breathes. */
-  line-height: calc(var(--display-leading) * 1em + 0.3rem);
-  font-variation-settings: var(--display-axes);
+  line-height: 1.08;
   text-wrap: balance;
 }
-/* The hero headline: one fluid size for every theme, times the theme's scale. */
 .hero-display {
-  font-size: calc(var(--display-scale, 1) * clamp(52px, 8.2vw, 118px));
+  font-size: clamp(42px, 6.2vw, 88px);
+  line-height: 1.02;
 }
-.eyebrow {
-  font-family: var(--ff-mono), ui-monospace, monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* A short label over a section or a case: sentence case, in the accent. */
+.kicker {
+  font-size: 15px;
+  font-weight: 600;
   color: var(--accent);
-}
-/* Where a theme's accent has two ends, the accent text wears both. */
-.accent-text,
-.eyebrow {
-  background: linear-gradient(90deg, var(--accent), var(--accent-alt));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 a {
@@ -73,6 +63,10 @@ a {
 a:hover {
   text-decoration-color: var(--accent);
 }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 ::selection {
   background: var(--accent);
   color: var(--on-accent);
@@ -80,6 +74,7 @@ a:hover {
 
 /* ------------------------------------------------------------------ motifs
  * One decoration per theme, behind everything, drawn only from its tokens.
+ * Studio has none, so the default is the calmest page.
  */
 .motif {
   position: fixed;
@@ -89,31 +84,41 @@ a:hover {
   overflow: hidden;
 }
 
-/* Studio: a measured grid, the way a layout looks with its columns on. */
-html[data-theme="studio"] .motif {
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--line) 55%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--line) 35%, transparent) 1px, transparent 1px);
-  background-size: calc((min(100vw, 1240px) - 80px) / 12) 100%, 100% 32px;
-  background-position: calc((100vw - min(100vw, 1240px)) / 2 + 40px) 0, 0 0;
-  mask-image: linear-gradient(to bottom, #000 0, transparent 900px);
-}
-
-/* Editorial: paper grain, from an SVG noise filter. */
-html[data-theme="editorial"] .motif {
+/* Paper: grain, from an SVG noise filter. */
+html[data-theme="paper"] .motif {
   opacity: 0.5;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-html[data-theme="editorial"][data-mode="dark"] .motif {
+html[data-theme="paper"][data-mode="dark"] .motif {
   opacity: 0.9;
   filter: invert(1);
 }
 
-/* Deck: a soft spotlight in the deck's two colours. */
-html[data-theme="deck"] .motif {
-  background:
-    radial-gradient(60% 55% at 78% 8%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
-    radial-gradient(45% 40% at 12% 30%, color-mix(in oklab, var(--accent-alt) 14%, transparent), transparent 70%);
+/* Deck: a spotlight in the deck's two colours, drifting slowly. */
+html[data-theme="deck"] .motif::before,
+html[data-theme="deck"] .motif::after {
+  content: "";
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  filter: blur(40px);
+}
+html[data-theme="deck"] .motif::before {
+  top: -35vmax;
+  right: -20vmax;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 26%, transparent), transparent);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+html[data-theme="deck"] .motif::after {
+  top: 10vmax;
+  left: -35vmax;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent-alt) 16%, transparent), transparent);
+  animation: drift 32s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-12vmax, 8vmax, 0); }
 }
 
 /* Fall: a few leaves on their way down, in the accent's two ends. */
@@ -127,7 +132,7 @@ html[data-theme="fall"] .motif i {
   top: -60px;
   width: 34px;
   height: 34px;
-  opacity: 0.55;
+  opacity: 0.3;
   background: var(--leaf);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1C6.5 4.6 3.6 9.6 4.6 14.6c.7 3.4 3.2 5.6 6.4 6.2V23h2v-2.2c3.2-.6 5.7-2.8 6.4-6.2C20.4 9.6 17.5 4.6 12 1zm-.45 4.2h.9v14.6h-.9z'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1C6.5 4.6 3.6 9.6 4.6 14.6c.7 3.4 3.2 5.6 6.4 6.2V23h2v-2.2c3.2-.6 5.7-2.8 6.4-6.2C20.4 9.6 17.5 4.6 12 1zm-.45 4.2h.9v14.6h-.9z'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -142,6 +147,10 @@ html[data-theme="fall"] .motif i:nth-child(6) { left: 69%; animation-delay: -13s
 html[data-theme="fall"] .motif i:nth-child(7) { left: 81%; animation-delay: -5s; --leaf: var(--accent-alt); animation-duration: 25s; }
 html[data-theme="fall"] .motif i:nth-child(8) { left: 90%; animation-delay: -18s; width: 26px; height: 26px; }
 html[data-theme="fall"] .motif i:nth-child(9) { left: 97%; animation-delay: -9s; width: 20px; height: 20px; --leaf: var(--accent-alt); }
+/* On a phone the reading column is the whole screen, so fewer leaves. */
+@media (max-width: 640px) {
+  html[data-theme="fall"] .motif i:nth-child(n + 5) { display: none; }
+}
 @keyframes leaf-fall {
   0% { transform: translate3d(0, -40px, 0) rotate(0deg); }
   25% { transform: translate3d(40px, 25vh, 0) rotate(80deg); }
@@ -152,9 +161,12 @@ html[data-theme="fall"] .motif i:nth-child(9) { left: 97%; animation-delay: -9s;
 
 @media (prefers-reduced-motion: reduce) {
   html[data-theme="fall"] .motif i { animation: none; display: none; }
+  html[data-theme="deck"] .motif::before,
+  html[data-theme="deck"] .motif::after { animation: none; }
   html { transition: none; }
 }
 
+/* One orchestrated entrance per page, nothing after it. */
 @media (prefers-reduced-motion: no-preference) {
   .rise {
     animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -166,6 +178,15 @@ html[data-theme="fall"] .motif i:nth-child(9) { left: 97%; animation-delay: -9s;
 @keyframes rise {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: none; }
+}
+
+/* A theme change spreads from the button that made it, where the browser
+   can animate it. Elsewhere it's the plain colour fade above. */
+html.vt { transition: none; }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* A token value that just changed in Customize, briefly lit in the accent. */

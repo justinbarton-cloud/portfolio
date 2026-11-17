@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import { apply, Customize } from './Customize'
+import { apply, Customize, originOf } from './Customize'
 import type { CustomizeTheme } from './customizeData'
 
 const subscribe = (cb: () => void) => {
@@ -38,7 +38,7 @@ export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
       <Link
         href={href}
         aria-current={on ? 'page' : undefined}
-        className={`rounded-full px-3 py-1.5 text-[14px] transition ${on ? 'bg-ink text-paper' : 'text-ink-soft hover:text-ink'}`}
+        className={`px-3 py-1.5 text-[15px] underline-offset-[6px] transition ${on ? 'text-ink underline decoration-accent decoration-2' : 'text-ink-soft hover:text-ink'}`}
       >
         {label}
       </Link>
@@ -47,14 +47,14 @@ export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
   return (
     <nav className="sticky top-0 z-30 border-b border-rule bg-paper/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1240px] items-center gap-1.5 px-6 py-3 sm:px-10">
-        <Link href="/" className="display mr-auto whitespace-nowrap text-[20px] leading-none text-ink">
+        <Link href="/" className="mr-auto text-[18px] font-bold whitespace-nowrap text-ink">
           Justin Barton
         </Link>
         {item('/work/', 'Work')}
         {item('/about/', 'About')}
         <button
           type="button"
-          onClick={() => apply(themes, themeId || 'studio', mode === 'dark' ? 'light' : 'dark')}
+          onClick={(e) => apply(themes, themeId || 'studio', mode === 'dark' ? 'light' : 'dark', originOf(e.currentTarget))}
           aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
           className="ml-1 grid size-9 place-items-center rounded-full text-ink-soft ring-1 ring-rule transition hover:text-ink"
@@ -81,7 +81,7 @@ export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
               <span key={i} className="size-[7px] rounded-[2px]" style={{ background: c }} />
             ))}
           </span>
-          <span className="hidden sm:inline">{theme ? theme.name : 'Customize'}</span>
+          <span className="hidden sm:inline">{theme ? theme.name : 'Theme'}</span>
         </button>
       </div>
       <Customize themes={themes} open={open} onClose={() => setOpen(false)} />

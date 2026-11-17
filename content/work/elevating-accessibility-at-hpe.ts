@@ -9,7 +9,7 @@ const work: Case = {
   "chapter": "hpe",
   "company": "Hewlett Packard Enterprise",
   "role": "Head of Product Design",
-  "timeframe": "March 2022 - Dec 2024",
+  "timeframe": "March 2022 to Dec 2024",
   "date": "2025-01",
   "tags": [
     "design-leadership"

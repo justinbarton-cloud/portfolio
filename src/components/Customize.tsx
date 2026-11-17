@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
-import type { ColorTokens, Mode } from '../../content/themes'
+import { TYPE_FAMILY, type ColorTokens, type Mode } from '../../content/themes'
 import type { CustomizeTheme } from './customizeData'
 import { MODE_KEY, THEME_KEY } from './ThemeScript'
 
@@ -15,7 +15,7 @@ import { MODE_KEY, THEME_KEY } from './ThemeScript'
  * Nothing re-renders the page. It sets data-theme and data-mode on <html>
  * and remembers them in this browser; the stylesheet does the rest.
  */
-type Pref = 'auto' | Mode
+export type Pref = 'auto' | Mode
 
 const html = () => document.documentElement
 const subscribe = (cb: () => void) => {
@@ -23,7 +23,7 @@ const subscribe = (cb: () => void) => {
   o.observe(html(), { attributes: true, attributeFilter: ['data-theme', 'data-mode', 'data-mode-pref'] })
   return () => o.disconnect()
 }
-const useHtml = () =>
+export const useHtml = () =>
   useSyncExternalStore(
     subscribe,
     () => `${html().dataset.theme}|${html().dataset.mode}|${html().dataset.modePref ?? 'auto'}`,
@@ -33,12 +33,21 @@ const useHtml = () =>
 const resolve = (t: CustomizeTheme, pref: Pref): Mode =>
   pref !== 'auto' ? pref : t.defaultMode === 'dark' || matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 
-export function apply(themes: CustomizeTheme[], themeId: string, pref: Pref) {
+/** Where a change came from, so the new look can spread out from there. */
+export type Origin = { x: number; y: number }
+export const originOf = (el: Element): Origin => {
+  const r = el.getBoundingClientRect()
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+}
+
+export function apply(themes: CustomizeTheme[], themeId: string, pref: Pref, from?: Origin) {
   const t = themes.find((x) => x.id === themeId) ?? themes[0]
-  html().dataset.theme = t.id
-  html().dataset.mode = resolve(t, pref)
-  html().dataset.modePref = pref
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.color[resolve(t, pref)].surface)
+  const run = () => {
+    html().dataset.theme = t.id
+    html().dataset.mode = resolve(t, pref)
+    html().dataset.modePref = pref
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.color[resolve(t, pref)].surface)
+  }
   try {
     localStorage.setItem(THEME_KEY, t.id)
     localStorage.setItem(MODE_KEY, pref)
@@ -49,6 +58,21 @@ export function apply(themes: CustomizeTheme[], themeId: string, pref: Pref) {
     url.searchParams.delete('mode')
     history.replaceState(null, '', url)
   }
+
+  // The new look grows as a circle from the control that asked for it. Where
+  // the browser can't, or the reader prefers less motion, the colours fade.
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!from || still || !document.startViewTransition) return run()
+  const r = Math.hypot(Math.max(from.x, innerWidth - from.x), Math.max(from.y, innerHeight - from.y))
+  html().classList.add('vt')
+  const vt = document.startViewTransition(run)
+  vt.ready.then(() =>
+    html().animate(
+      { clipPath: [`circle(0px at ${from.x}px ${from.y}px)`, `circle(${r}px at ${from.x}px ${from.y}px)`] },
+      { duration: 650, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
+    ),
+  )
+  vt.finished.finally(() => html().classList.remove('vt'))
 }
 
 const COLOR_ROWS: [keyof ColorTokens, string][] = [
@@ -81,13 +105,9 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
   if (!open) return null
   const rows: [string, string, string?][] = [
     ...COLOR_ROWS.map(([k, name]) => [name, c[k], c[k]] as [string, string, string]),
-    ['type.display', t.type.display.family],
+    ['type.family', TYPE_FAMILY],
     ['type.display.weight', String(t.type.displayWeight)],
     ['type.display.tracking', t.type.displayTracking],
-    ['type.display.leading', String(t.type.displayLeading)],
-    ['type.display.scale', String(t.type.displayScale)],
-    ['type.display.axes', t.type.displayAxes.replace(/"/g, '')],
-    ['type.body', t.type.body.family],
     ['shape.radius', t.shape.radius],
     ['motif', t.motif],
   ]
@@ -107,9 +127,9 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
       <aside className="absolute top-0 right-0 flex h-full w-[min(460px,100vw)] flex-col border-l border-rule bg-paper shadow-2xl">
         <header className="flex items-start justify-between gap-4 border-b border-rule px-6 py-5">
           <div>
-            <div className="eyebrow">Customize</div>
+            <div className="kicker">Customize</div>
             <p className="mt-2 text-[14px] leading-snug text-ink-soft">
-              One set of {rows.length} tokens. Each theme answers them differently, in a light and a dark mode.
+              Every page asks for these {rows.length} tokens by name. Each theme answers them differently, in light and in dark.
             </p>
           </div>
           <button
@@ -126,7 +146,7 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
         </header>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="font-mono text-[11px] tracking-[0.08em] text-ink-faint uppercase">Mode</div>
+          <div className="text-[14px] font-semibold text-ink">Mode</div>
           <div role="radiogroup" aria-label="Mode" className="mt-3 grid grid-cols-3 rounded-full bg-raised p-1 ring-1 ring-rule">
             {(['auto', 'light', 'dark'] as Pref[]).map((p) => (
               <button
@@ -134,7 +154,7 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
                 type="button"
                 role="radio"
                 aria-checked={pref === p}
-                onClick={() => apply(themes, t.id, p)}
+                onClick={(e) => apply(themes, t.id, p, originOf(e.currentTarget))}
                 className={`rounded-full py-2 text-[13.5px] capitalize transition ${pref === p ? 'bg-ink text-paper' : 'text-ink-soft hover:text-ink'}`}
               >
                 {p}
@@ -142,7 +162,7 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
             ))}
           </div>
 
-          <div className="mt-8 font-mono text-[11px] tracking-[0.08em] text-ink-faint uppercase">Theme</div>
+          <div className="mt-8 text-[14px] font-semibold text-ink">Theme</div>
           <div role="radiogroup" aria-label="Theme" className="mt-3 grid grid-cols-2 gap-3">
             {themes.map((x) => {
               const xc = x.color[pref === 'auto' ? (x.defaultMode === 'dark' ? 'dark' : mode) : pref]
@@ -153,19 +173,13 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  onClick={() => apply(themes, x.id, pref)}
+                  onClick={(e) => apply(themes, x.id, pref, originOf(e.currentTarget))}
                   className={`overflow-hidden text-left transition ${on ? 'ring-2 ring-accent' : 'ring-1 ring-rule hover:ring-ink-faint'}`}
                   style={{ borderRadius: x.shape.radius, background: xc.surface }}
                 >
                   <div className="px-4 pt-4 pb-3">
                     <div
-                      style={{
-                        fontFamily: `var(${x.type.display.var})`,
-                        fontWeight: x.type.displayWeight,
-                        letterSpacing: x.type.displayTracking,
-                        fontVariationSettings: x.type.displayAxes,
-                        color: xc.ink,
-                      }}
+                      style={{ fontWeight: x.type.displayWeight, letterSpacing: x.type.displayTracking, color: xc.ink }}
                       className="text-[34px] leading-none"
                     >
                       Aa
@@ -188,7 +202,7 @@ export function Customize({ themes, open, onClose }: { themes: CustomizeTheme[];
           </div>
 
           <div className="mt-8 flex items-baseline justify-between">
-            <div className="font-mono text-[11px] tracking-[0.08em] text-ink-faint uppercase">Tokens</div>
+            <div className="text-[14px] font-semibold text-ink">Tokens</div>
             <div className="font-mono text-[11px] text-ink-faint">
               {t.id} / {mode}
             </div>

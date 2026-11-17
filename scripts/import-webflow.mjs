@@ -82,7 +82,7 @@ const importCase = async (path) => {
   const title = clean(html.match(/project-detail-heading-wrapper"><h2>(.*?)<\/h2>/s)?.[1] ?? id, `${id} title`)
   const tag = clean(html.match(/class="project-detail-subtext">(.*?)<\/h6>/s)?.[1] ?? '', `${id} tag`)
   const role = clean(html.match(/<h5>My Role<\/h5>.*?project-detail">(.*?)<\/div>/s)?.[1] ?? '', `${id} role`)
-  const timeframe = clean(html.match(/<h5>Timeline<\/h5>.*?project-detail">(.*?)<\/div>/s)?.[1] ?? '', `${id} timeline`)
+  const timeframe = clean(html.match(/<h5>Timeline<\/h5>.*?project-detail">(.*?)<\/div>/s)?.[1] ?? '', `${id} timeline`).replace(/ - /g, ' to ')
   const heroSrc = html.match(/project-detail-image-wrapper"><img[^>]*?\ssrc="([^"]+)"/s)?.[1]
 
   const rich = html.match(/<div class="rich-text w-richtext">(.*?)<\/div><\/div><\/div>/s)?.[1] ?? ''
