@@ -1,9 +1,10 @@
 # Justin Barton's portfolio
 
 Justin's design portfolio: his Toast work and his earlier work (HPE and
-before), built from the POS Design showcase's template. Next.js 16, static,
-published to GitHub Enterprise Pages behind Toast sign-in with
-`npm run publish`.
+before), built from the POS Design showcase's template. Next.js 16, static.
+It lives on his personal github.com account (justinbarton-cloud/portfolio),
+never on a Toast org, and publishes to public GitHub Pages at
+https://justinbarton-cloud.github.io/portfolio/ on every push to main.
 
 ## Content
 
@@ -15,18 +16,30 @@ published to GitHub Enterprise Pages behind Toast sign-in with
 - `npm run import-webflow` re-imports cases from justinbarton.webflow.io. It
   won't overwrite an edited file without `--force`.
 
+## Themes
+
+`content/themes.ts` holds the design tokens. Every theme answers the same
+semantic questions (color, display face, weight, tracking, leading, scale,
+radius, motif) in a light and a dark mode, and components only ask for the
+semantic name. The build checks every text color against its page, so a new
+theme that fails contrast fails `npm run check`. The Customize panel shows the
+live token table; the fonts are OFL and listed in `src/app/fonts/LICENSES.md`.
+
 ## Rules
 
 - Write in Justin's voice (the justin-voice skill). No em dashes or en dashes
   anywhere; `npm run check` fails on them.
 - Never invent a number, a quote or an outcome. Measured impact carries its
   source and date; otherwise label it expected or qualitative.
-- Everything is `share: 'internal'` unless Justin marks it public. Toast work
-  stays internal: unshipped roadmap, customer research and internal metrics
-  never go public.
+- This repo and its site are public-safe. Nothing confidential to Toast goes
+  in it at all: no unshipped roadmap, customer research or internal metrics,
+  not even as `share: 'internal'`. Toast work only goes in once it's public
+  or cleared.
+- The Pages build keeps only `share: 'public'` cases and fails if anything
+  points inside Toast (`scripts/check-public.mjs`).
 - Name customers by first name and a description of the business only.
 
-## Before publishing
+## Before pushing
 
-`npm run check` (registry, build, types, dashes), look at it with
-`npm run dev`, commit, then `npm run publish`.
+`npm run check` (registry, build, types, dashes), then `npm run build:public`
+(the Pages build plus the leak check), and look at it with `npm run dev`.

@@ -2,9 +2,17 @@ import { chapters } from './about'
 import { work } from './registry.generated'
 import type { Case, ChapterId } from './types'
 
+/**
+ * The Pages build is the public site, so it only ever holds cases marked
+ * `share: 'public'`. Local dev and `npm run check` show everything, with
+ * internal cases marked.
+ */
+export const publicOnly = !!process.env.PAGES_BASE_PATH
+
 /** Every case, newest first, deep cases ahead of light ones on the same date. */
 export const allCases: Case[] = work
   .map((w) => w.work)
+  .filter((c) => !publicOnly || c.share === 'public')
   .sort((a, b) => (a.date === b.date ? Number(!!b.deep) - Number(!!a.deep) || a.id.localeCompare(b.id) : a.date < b.date ? 1 : -1))
 
 export const caseById: Record<string, Case> = Object.fromEntries(allCases.map((c) => [c.id, c]))

@@ -2,26 +2,36 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSyncExternalStore } from 'react'
-import { THEME_KEY, THEMES } from './ThemeScript'
+import { useEffect, useState, useSyncExternalStore } from 'react'
+import { apply, Customize } from './Customize'
+import type { CustomizeTheme } from './customizeData'
 
 const subscribe = (cb: () => void) => {
   const o = new MutationObserver(cb)
-  o.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+  o.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-mode'] })
   return () => o.disconnect()
 }
 
-/** The bar on every page: the name home, the three places, and the look. */
-export function SiteNav() {
+/**
+ * The bar on every page: the name home, the places, a one tap light or dark
+ * switch, and Customize, which says which theme is on.
+ */
+export function SiteNav({ themes }: { themes: CustomizeTheme[] }) {
   const path = usePathname()
-  const theme = useSyncExternalStore(subscribe, () => document.documentElement.dataset.theme ?? 'paper', () => 'paper')
-  const next = THEMES[(THEMES.findIndex((t) => t.id === theme) + 1) % THEMES.length]
-  const flip = () => {
-    document.documentElement.dataset.theme = next.id
-    try {
-      localStorage.setItem(THEME_KEY, next.id)
-    } catch {}
-  }
+  const [open, setOpen] = useState(false)
+  const [themeId, mode] = useSyncExternalStore(
+    subscribe,
+    () => `${document.documentElement.dataset.theme}|${document.documentElement.dataset.mode}`,
+    () => '|',
+  ).split('|')
+  const theme = themes.find((t) => t.id === themeId)
+  // Anything on the page can open Customize, like the spec line on the home page.
+  useEffect(() => {
+    const o = () => setOpen(true)
+    window.addEventListener('open-customize', o)
+    return () => window.removeEventListener('open-customize', o)
+  }, [])
+
   const item = (href: string, label: string) => {
     const on = href === '/' ? path === '/' : path.startsWith(href)
     return (
@@ -35,26 +45,46 @@ export function SiteNav() {
     )
   }
   return (
-    <nav className="sticky top-0 z-30 border-b border-rule bg-paper/90 backdrop-blur">
-      <div className="mx-auto flex max-w-[1240px] items-center gap-2 px-6 py-3 sm:px-10">
-        <Link href="/" className="display mr-auto text-[19px] leading-none text-ink">
+    <nav className="sticky top-0 z-30 border-b border-rule bg-paper/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1240px] items-center gap-1.5 px-6 py-3 sm:px-10">
+        <Link href="/" className="display mr-auto whitespace-nowrap text-[20px] leading-none text-ink">
           Justin Barton
         </Link>
         {item('/work/', 'Work')}
         {item('/about/', 'About')}
         <button
           type="button"
-          onClick={flip}
-          title={`Switch to the ${next.name} look`}
-          aria-label={`Switch to the ${next.name} look`}
+          onClick={() => apply(themes, themeId || 'studio', mode === 'dark' ? 'light' : 'dark')}
+          aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
           className="ml-1 grid size-9 place-items-center rounded-full text-ink-soft ring-1 ring-rule transition hover:text-ink"
         >
-          <svg viewBox="0 0 16 16" aria-hidden className="size-4">
-            <circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-            <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor" />
-          </svg>
+          {mode === 'dark' ? (
+            <svg viewBox="0 0 16 16" aria-hidden className="size-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+              <circle cx="8" cy="8" r="3" />
+              <path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 16 16" aria-hidden className="size-4" fill="currentColor">
+              <path d="M13.2 10.2A5.8 5.8 0 0 1 5.8 2.8a5.8 5.8 0 1 0 7.4 7.4z" />
+            </svg>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-expanded={open}
+          className="flex items-center gap-2 rounded-full py-1.5 pr-3.5 pl-2 text-[14px] text-ink-soft ring-1 ring-rule transition hover:text-ink"
+        >
+          <span aria-hidden className="grid grid-cols-2 gap-[2px]">
+            {['var(--ink)', 'var(--accent)', 'var(--accent-alt)', 'var(--line)'].map((c, i) => (
+              <span key={i} className="size-[7px] rounded-[2px]" style={{ background: c }} />
+            ))}
+          </span>
+          <span className="hidden sm:inline">{theme ? theme.name : 'Customize'}</span>
         </button>
       </div>
+      <Customize themes={themes} open={open} onClose={() => setOpen(false)} />
     </nav>
   )
 }

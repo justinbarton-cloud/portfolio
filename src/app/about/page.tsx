@@ -9,13 +9,13 @@ export default function About() {
     <main className="mx-auto max-w-[1240px] px-6 pt-16 sm:px-10 sm:pt-24">
       <section className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <div className="overflow-hidden rounded-[28px] ring-1 ring-rule">
+          <div className="overflow-hidden rounded-[var(--radius)] ring-1 ring-rule">
             <Pic p={about.photo} sizes="(min-width: 1024px) 460px, 100vw" priority />
           </div>
         </div>
         <div className="lg:col-span-6 lg:col-start-7 lg:pt-6">
           <div className="eyebrow">About</div>
-          <h1 className="display mt-5 text-[48px] leading-[1.02] text-ink sm:text-[64px]">{about.name}</h1>
+          <h1 className="display mt-5 text-[48px] text-ink sm:text-[64px]">{about.name}</h1>
           <p className="mt-3 text-[18px] text-ink-soft">
             {about.role}, {about.company}. {about.location}.
           </p>
@@ -60,7 +60,7 @@ export default function About() {
         <div className="mt-10 columns-1 gap-10 md:columns-2 lg:columns-3">
           {about.testimonials.map((q) => (
             <figure key={q.who} className="mb-10 break-inside-avoid">
-              <blockquote className="display text-[21px] leading-snug text-ink">&ldquo;{q.text}&rdquo;</blockquote>
+              <blockquote className="display text-[21px] text-ink">&ldquo;{q.text}&rdquo;</blockquote>
               <figcaption className="mt-3 text-[14px] text-ink-faint">
                 {q.who}, {q.title}
               </figcaption>

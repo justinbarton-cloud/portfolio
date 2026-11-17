@@ -1,6 +1,6 @@
 /**
- * Where the site lives under its host. On GitHub Enterprise Pages that's
- * /toasttab/pos-design-showcase, set by the deploy as PAGES_BASE_PATH and
+ * Where the site lives under its host. On GitHub Pages that's /portfolio,
+ * set by the build as PAGES_BASE_PATH and
  * handed to the page as NEXT_PUBLIC_BASE_PATH (see next.config.ts). Locally,
  * and anywhere else the site runs at the root, it's empty and these change
  * nothing.

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { about } from './about'
 import { work } from './registry.generated'
+import { contrastProblems } from './themes'
 import type { Picture } from './types'
 
 /**
@@ -29,5 +30,6 @@ export function validate() {
     c.impact?.forEach((i) => i.kind === 'measured' && !i.source && fail(where, 'a measured impact needs its source'))
   }
   pic('content/about.ts photo', about.photo)
+  contrastProblems().forEach((p) => fail('content/themes.ts', p))
   if (problems.length) throw new Error(`Content check failed:\n  ${problems.join('\n  ')}`)
 }

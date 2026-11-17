@@ -13,7 +13,7 @@ export function CaseBody({ blocks }: { blocks: Block[] }) {
         switch (b.kind) {
           case 'h':
             return (
-              <h2 key={i} className="display mx-auto max-w-[42rem] border-t border-rule pt-10 text-[30px] leading-tight text-ink first:border-0 first:pt-0 sm:text-[34px]">
+              <h2 key={i} className="display mx-auto max-w-[42rem] border-t border-rule pt-10 text-[30px] text-ink first:border-0 first:pt-0 sm:text-[34px]">
                 {b.text}
               </h2>
             )
@@ -42,7 +42,7 @@ export function CaseBody({ blocks }: { blocks: Block[] }) {
           case 'figure':
             return (
               <figure key={i} className="mx-auto max-w-[1000px] py-4">
-                <div className="overflow-hidden rounded-[18px] bg-raised ring-1 ring-rule">
+                <div className="overflow-hidden rounded-[var(--radius)] bg-raised ring-1 ring-rule">
                   <Pic p={b.picture} sizes="(min-width: 1080px) 1000px, 100vw" />
                 </div>
                 {b.picture.caption ? (
@@ -53,7 +53,7 @@ export function CaseBody({ blocks }: { blocks: Block[] }) {
           case 'quote':
             return (
               <blockquote key={i} className="mx-auto max-w-[42rem] border-l-2 border-accent pl-6">
-                <p className="display text-[24px] leading-snug text-ink">&ldquo;{b.text}&rdquo;</p>
+                <p className="display text-[24px] text-ink">&ldquo;{b.text}&rdquo;</p>
                 <footer className="mt-3 text-[14px] text-ink-faint">{b.attribution}</footer>
               </blockquote>
             )

@@ -23,7 +23,7 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
         <div className="eyebrow rise">
           {c.company} · {c.tags.map((t) => tagLabels[t]).join(', ')}
         </div>
-        <h1 className="display rise rise-2 mt-5 max-w-[20ch] text-[46px] leading-[1.0] text-ink sm:text-[68px] lg:text-[80px]">
+        <h1 className="display rise rise-2 mt-5 max-w-[20ch] text-[46px] text-ink sm:text-[68px] lg:text-[80px]">
           {c.title}
         </h1>
         <p className="rise rise-3 mt-7 max-w-[60ch] text-[20px] leading-relaxed text-ink-soft">{c.summary}</p>
@@ -43,7 +43,7 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
 
       {c.cover ? (
         <div className="mx-auto mt-14 max-w-[1240px] px-6 sm:px-10">
-          <div className="relative aspect-[21/9] overflow-hidden rounded-[26px] ring-1 ring-rule">
+          <div className="relative aspect-[21/9] overflow-hidden rounded-[var(--radius)] ring-1 ring-rule">
             <Pic p={c.cover} sizes="(min-width: 1240px) 1160px, 100vw" priority className="absolute inset-0 h-full object-cover" />
           </div>
         </div>
@@ -61,7 +61,7 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
       <nav className="mx-auto mt-24 max-w-[1240px] px-6 sm:px-10">
         <Link href={`/work/${next.id}/`} className="group block border-t border-ink pt-6">
           <div className="eyebrow">Next case</div>
-          <div className="display mt-3 text-[34px] leading-tight text-ink transition group-hover:text-accent sm:text-[44px]">
+          <div className="display mt-3 text-[34px] text-ink transition group-hover:text-accent sm:text-[44px]">
             {next.title} →
           </div>
         </Link>

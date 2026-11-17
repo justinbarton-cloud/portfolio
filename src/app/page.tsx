@@ -3,6 +3,8 @@ import { about, chapters } from '../../content/about'
 import { allCases, casesIn, deepCases } from '../../content/site'
 import { CaseCard, CaseRow } from '../components/Cards'
 import { Pic } from '../components/Pic'
+import { SpecLine } from '../components/SpecLine'
+import { customizeThemes } from '../components/customizeData'
 
 /*
  * The home page reads top down as the argument: who Justin is and what he
@@ -15,16 +17,29 @@ export default function Home() {
   const quotes = about.testimonials.slice(0, 3)
   return (
     <main>
-      <section className="mx-auto grid max-w-[1240px] items-end gap-12 px-6 pt-16 pb-20 sm:px-10 sm:pt-24 lg:grid-cols-12">
-        <div className="lg:col-span-8">
-          <div className="eyebrow rise">
-            Design leader · {about.role}, {about.company}
-          </div>
-          <h1 className="display rise rise-2 mt-6 max-w-[16ch] text-[52px] leading-[0.98] text-ink sm:text-[76px] lg:text-[92px]">
+      <section className="mx-auto max-w-[1240px] px-6 pt-14 sm:px-10 sm:pt-20">
+        <div className="eyebrow rise">
+          Design leader · {about.role}, {about.company}
+        </div>
+        <div className="mt-6 grid items-end gap-10 lg:grid-cols-12">
+          <h1 className="display hero-display rise rise-2 text-ink lg:col-span-9">
             {about.headline}
           </h1>
-          <p className="rise rise-3 mt-8 max-w-[56ch] text-[19px] leading-relaxed text-ink-soft">{about.intro}</p>
-          <div className="rise rise-4 mt-8 flex flex-wrap gap-3 text-[15px]">
+          <div className="rise rise-3 relative lg:col-span-3 lg:-mb-6">
+            <div className="overflow-hidden rounded-[var(--radius)] ring-1 ring-rule">
+              <Pic p={about.photo} sizes="(min-width: 1024px) 300px, 70vw" priority />
+            </div>
+            <div className="absolute -bottom-3 left-4 rounded-full bg-ink px-3 py-1 font-mono text-[11px] text-paper">
+              {about.location}
+            </div>
+          </div>
+        </div>
+        <div className="rise rise-3 mt-12">
+          <SpecLine themes={customizeThemes()} />
+        </div>
+        <div className="mt-10 grid gap-8 lg:grid-cols-12">
+          <p className="rise rise-4 text-[20px] leading-relaxed text-ink-soft lg:col-span-7">{about.intro}</p>
+          <div className="rise rise-4 flex flex-wrap items-start gap-3 text-[15px] lg:col-span-4 lg:col-start-9 lg:justify-end">
             <Link href="/work/" className="rounded-full bg-ink px-5 py-2.5 font-semibold text-paper transition hover:bg-accent hover:text-on-accent">
               See the work
             </Link>
@@ -33,12 +48,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="rise rise-3 lg:col-span-4">
-          <div className="overflow-hidden rounded-[28px] ring-1 ring-rule">
-            <Pic p={about.photo} sizes="(min-width: 1024px) 380px, 80vw" priority />
-          </div>
-        </div>
       </section>
+
+      <div className="h-24" />
 
       <section className="mx-auto max-w-[1240px] px-6 sm:px-10">
         <div className="flex items-baseline justify-between border-t border-ink pt-5">
@@ -55,7 +67,7 @@ export default function Home() {
                   <div className="lg:col-span-8">
                     <CaseCard c={c} priority wide />
                   </div>
-                  <p className="display text-[22px] leading-snug text-ink-soft lg:col-span-4 lg:pb-24">
+                  <p className="display text-[22px] text-ink-soft lg:col-span-4 lg:pb-24">
                     {c.role}, {c.timeframe}.
                   </p>
                 </div>
@@ -75,7 +87,7 @@ export default function Home() {
             <div key={ch.id} className="mt-14 grid gap-x-10 gap-y-6 lg:grid-cols-12">
               <div className="lg:col-span-4">
                 <div className="display accent-text text-[15px] text-accent">{String(n + 1).padStart(2, '0')}</div>
-                <h3 className="display mt-2 text-[34px] leading-tight text-ink">{ch.name}</h3>
+                <h3 className="display mt-2 text-[34px] text-ink">{ch.name}</h3>
                 <p className="mt-2 text-[14px] text-ink-faint">{ch.span}</p>
                 <p className="mt-3 max-w-[36ch] text-[16px] leading-relaxed text-ink-soft">{ch.blurb}</p>
               </div>
@@ -101,7 +113,7 @@ export default function Home() {
         <div className="mt-10 grid gap-10 md:grid-cols-3">
           {quotes.map((q) => (
             <figure key={q.who}>
-              <blockquote className="display text-[22px] leading-snug text-ink">&ldquo;{q.text}&rdquo;</blockquote>
+              <blockquote className="display text-[22px] text-ink">&ldquo;{q.text}&rdquo;</blockquote>
               <figcaption className="mt-4 text-[14px] text-ink-faint">
                 {q.who}, {q.title}
               </figcaption>

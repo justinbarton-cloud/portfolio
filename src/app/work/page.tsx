@@ -10,7 +10,7 @@ export default function Work() {
   return (
     <main className="mx-auto max-w-[1240px] px-6 pt-16 sm:px-10 sm:pt-24">
       <div className="eyebrow">Work</div>
-      <h1 className="display mt-5 max-w-[18ch] text-[48px] leading-[1.02] text-ink sm:text-[68px]">
+      <h1 className="display mt-5 max-w-[18ch] text-[48px] text-ink sm:text-[68px]">
         {allCases.length} cases across twenty years of design.
       </h1>
       {chapters.map((ch) => {
