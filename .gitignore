@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env*
+*.log
+.DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo
+.claude/settings.local.json
+
+# Written before every dev, build and check run.
+content/registry.generated.ts

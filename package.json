@@ -1,0 +1,31 @@
+{
+  "name": "justin-barton-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/registry.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/registry.mjs",
+    "build": "next build",
+    "start": "next start",
+    "registry": "node scripts/registry.mjs",
+    "import-webflow": "node scripts/import-webflow.mjs",
+    "check": "node scripts/registry.mjs && next build && tsc --noEmit && node scripts/check-dashes.mjs",
+    "publish": "bash scripts/publish.sh"
+  },
+  "dependencies": {
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

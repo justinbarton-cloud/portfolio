@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/*
+ * Two looks, as CSS variables on <html data-theme>. The head script in
+ * src/components/ThemeScript.tsx picks one before the first paint, so a
+ * reload never flashes the other.
+ *
+ *   paper  warm paper and ink, a cobalt accent used sparingly
+ *   deck   the interview deck's near-black, with its violet to orange accent
+ *
+ * Text colours hold 4.5:1 on the page and on raised panels; captions hold 3:1.
+ */
+:root,
+html[data-theme="paper"] {
+  --paper: #f3eee5;
+  --raised: #fbf8f2;
+  --ink: #15130f;
+  --ink-soft: #4a453d;
+  --ink-faint: #736c61;
+  --rule: #d9d1c3;
+  --accent: #2b3fd6;
+  --accent-2: #2b3fd6;
+  --on-accent: #ffffff;
+  color-scheme: light;
+}
+html[data-theme="deck"] {
+  --paper: #0b0b0c;
+  --raised: #161618;
+  --ink: #f4f2ee;
+  --ink-soft: #bdb9b2;
+  --ink-faint: #8c8881;
+  --rule: #2a2a2d;
+  --accent: #a78bfa;
+  --accent-2: #f59e5b;
+  --on-accent: #0b0b0c;
+  color-scheme: dark;
+}
+
+@theme {
+  --color-paper: var(--paper);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-on-accent: var(--on-accent);
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Fraunces at display sizes: its large optical size, a touch soft. */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-weight: 380;
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+/* In the deck theme, eyebrows and the big numbers wear the deck's gradient. */
+html[data-theme="deck"] .eyebrow,
+html[data-theme="deck"] .accent-text {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+a {
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .rise-2 { animation-delay: 90ms; }
+  .rise-3 { animation-delay: 180ms; }
+  .rise-4 { animation-delay: 270ms; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
