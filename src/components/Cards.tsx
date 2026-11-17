@@ -18,7 +18,10 @@ export function CaseCard({ c, priority }: { c: Case; priority?: boolean }) {
           />
         ) : null}
       </div>
-      <p className="mt-5 text-[15px] text-ink-faint">{c.company}</p>
+      <p className="mt-5 text-[15px] text-ink-faint">
+        {c.company}
+        {c.walkthrough ? <span className="text-accent"> · Click through it</span> : null}
+      </p>
       <h3 className="display mt-1 text-[24px] text-ink transition group-hover:text-accent">{c.title}</h3>
       <p className="mt-3 line-clamp-3 text-[17px] leading-relaxed text-ink-soft">{c.summary}</p>
     </Link>
@@ -34,6 +37,7 @@ export function CaseRow({ c }: { c: Case }) {
       </div>
       <div className="min-w-0">
         <h3 className="display text-[22px] text-ink transition group-hover:text-accent sm:text-[26px]">{c.title}</h3>
+        {c.walkthrough ? <p className="mt-1 text-[15px] text-accent">Click through it</p> : null}
         <p className="mt-2 line-clamp-2 max-w-[60ch] text-[17px] leading-relaxed text-ink-soft">{c.summary}</p>
       </div>
       <div className="hidden pt-1.5 text-[15px] whitespace-nowrap text-ink-faint sm:block">{c.timeframe}</div>

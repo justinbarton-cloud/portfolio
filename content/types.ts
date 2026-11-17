@@ -30,6 +30,30 @@ export type Picture = { src: string; w: number; h: number; alt: string; caption?
 export type Link = { label: string; href: string }
 
 /**
+ * A piece of work you can click through, played in a device frame on the
+ * case page. Each step is one real screen, what to notice on it, and the
+ * spot to press to go on, so a reader moves through the work the way its
+ * user would. Hotspots are percentages of the screen, so they land on the
+ * same place at any size.
+ */
+export type Walkthrough = {
+  device: 'browser'
+  /** One line over the stage on the home page. */
+  intro: string
+  steps: {
+    screen: Picture
+    /** The address bar, as the product would show it. */
+    url?: string
+    /** What this screen shows, in a few words. */
+    title: string
+    /** What to notice, and why it matters. One or two sentences. */
+    caption: string
+    /** Where to press to go to the next step. The last step has none. */
+    hotspot?: { x: number; y: number; w: number; h: number; label: string }
+  }[]
+}
+
+/**
  * Impact is a union, never a bare string, so a projection can't read as a
  * measurement. Measured numbers carry where they came from and when.
  */
@@ -52,6 +76,8 @@ export type Block =
 
 export type Case = {
   id: string
+  /** The work, playable. Shown in place of the cover on the case page, and on the home page. */
+  walkthrough?: Walkthrough
   /** Names the problem or the outcome, so it reads to someone with no context. */
   title: string
   /** One line, about twenty words: what changed, for whom. */

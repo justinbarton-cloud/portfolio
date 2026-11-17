@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { allCases, caseById, nextCase, tagLabels } from '../../../../content/site'
 import { CaseBody } from '../../../components/CaseBody'
 import { Pic } from '../../../components/Pic'
+import { Stage } from '../../../components/Stage'
 
 export const dynamicParams = false
 export const generateStaticParams = () => allCases.map((c) => ({ id: c.id }))
@@ -39,7 +40,11 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
         </dl>
       </header>
 
-      {c.cover ? (
+      {c.walkthrough ? (
+        <div className="mx-auto mt-14 max-w-[1240px] px-6 sm:px-10">
+          <Stage w={c.walkthrough} label={c.title} />
+        </div>
+      ) : c.cover ? (
         <div className="mx-auto mt-14 max-w-[1240px] px-6 sm:px-10">
           <div className="relative aspect-[21/9] overflow-hidden rounded-[var(--radius)]">
             <Pic p={c.cover} sizes="(min-width: 1240px) 1160px, 100vw" priority className="absolute inset-0 h-full object-cover" />

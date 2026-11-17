@@ -3,6 +3,7 @@ import { about } from '../../content/about'
 import { allCases, deepCases } from '../../content/site'
 import { CaseCard } from '../components/Cards'
 import { Pic } from '../components/Pic'
+import { Stage } from '../components/Stage'
 import { ThemeStrip } from '../components/ThemeStrip'
 import { customizeThemes } from '../components/customizeData'
 
@@ -14,8 +15,11 @@ import { customizeThemes } from '../components/customizeData'
  * stand in.
  */
 export default function Home() {
-  const lead = deepCases.length ? deepCases.slice(0, 3) : allCases.slice(0, 3)
+  const played0 = allCases.find((c) => c.walkthrough)
+  const pool = (deepCases.length ? deepCases : allCases).filter((c) => c !== played0)
+  const lead = pool.slice(0, 3)
   const quotes = about.testimonials.slice(0, 2)
+  const played = played0
   return (
     <main>
       <section className="mx-auto grid max-w-[1240px] items-center gap-12 px-6 pt-16 sm:px-10 sm:pt-24 lg:grid-cols-12">
@@ -38,6 +42,24 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {played?.walkthrough ? (
+        <section className="mx-auto mt-32 max-w-[1240px] px-6 sm:px-10">
+          <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <p className="kicker">{played.company}</p>
+              <h2 className="display mt-3 text-[32px] text-ink sm:text-[40px]">{played.title}</h2>
+            </div>
+            <p className="text-[18px] leading-relaxed text-ink-soft lg:col-span-5">{played.walkthrough.intro}</p>
+          </div>
+          <div className="mt-10">
+            <Stage w={played.walkthrough} label={played.title} />
+          </div>
+          <Link href={`/work/${played.id}/`} className="mt-6 inline-block text-[16px] text-ink-soft underline hover:text-ink">
+            Read the whole case
+          </Link>
+        </section>
+      ) : null}
 
       <section className="mx-auto mt-32 max-w-[1240px] px-6 sm:px-10">
         <div className="flex items-baseline justify-between gap-6">

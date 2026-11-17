@@ -15,6 +15,39 @@ const work: Case = {
     "product-design"
   ],
   "share": "public",
+  "walkthrough": {
+    "device": "browser",
+    "intro": "I led the North Star vision for GreenLake: a home you arrange yourself instead of a page of launch buttons. Press the ring to step through it.",
+    "steps": [
+      {
+        "screen": { "src": "/work/services-centric-ux-architecture/675c587905fc6c2f822148d1_old-glp-dashboard.png", "w": 1920, "h": 1459, "alt": "The original GreenLake home: a grid of applications, each with its own Launch button" },
+        "url": "greenlake.hpe.com",
+        "title": "Where it started",
+        "caption": "The original platform was link and launch. Every service was a separate application, so the home page was a row of Launch buttons and customers had to know where to go.",
+        "hotspot": { "x": 12.5, "y": 26, "w": 50, "h": 29, "label": "See what replaced the launch grid" }
+      },
+      {
+        "screen": { "src": "/work/services-centric-ux-architecture/675c59557e121927424df91c_n-star-glp-dashboard.jpeg", "w": 1920, "h": 1080, "alt": "The North Star home: pinned services, a private cloud summary and usage charts on one dashboard" },
+        "url": "greenlake.hpe.com/home",
+        "title": "A home you arrange",
+        "caption": "Research told us customers wanted a dashboard they could fully customize. North Star brings every service onto one page of widgets, with Edit dashboard at the top.",
+        "hotspot": { "x": 23, "y": 1.2, "w": 23.6, "h": 4, "label": "Open search" }
+      },
+      {
+        "screen": { "src": "/work/hpe-greenlake-north-star-vision/67587d3490ce0f87525195c8_n-star-global-search.jpeg", "w": 1920, "h": 1080, "alt": "Global search answering a question about running instances, with an AI summary above the results" },
+        "url": "greenlake.hpe.com/morpheus/dashboard",
+        "title": "Search that answers",
+        "caption": "Search was the way customers said they preferred to navigate. Ask a question and it answers first, with an AI summary over the top hits.",
+        "hotspot": { "x": 24.4, "y": 8.6, "w": 31.8, "h": 6.6, "label": "See how a new customer gets started" }
+      },
+      {
+        "screen": { "src": "/work/hpe-greenlake-north-star-vision/675875eb0f8bddecbdd09adb_n-star-onboarding.png", "w": 1920, "h": 1080, "alt": "A welcome tour for a new private cloud, beside a getting started checklist" },
+        "url": "greenlake.hpe.com/morpheus/welcome",
+        "title": "Guided from day one",
+        "caption": "Guided onboarding turned out to be a good way to prompt personalization. North Star shaped it, and we built it with the teams that already had mature tours in production."
+      }
+    ]
+  },
   "cover": {
     "src": "/work/hpe-greenlake-north-star-vision/image_processing20200129-19798-1k8ponz-4-min.png",
     "w": 1160,

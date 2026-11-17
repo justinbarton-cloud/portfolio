@@ -270,3 +270,39 @@ html.vt { transition: none; }
   from { background: color-mix(in oklab, var(--accent) 28%, transparent); }
   to { background: transparent; }
 }
+
+/* ------------------------------------------------------------------ stage
+ * The walkthrough player. Screens crossfade; the ring marks where to press.
+ */
+.stage-screen {
+  opacity: 0;
+  transform: scale(1.015);
+  transition: opacity 450ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.stage-screen.is-on {
+  opacity: 1;
+  transform: none;
+}
+.stage-spot {
+  border-radius: calc(var(--radius) * 0.6 + 2px);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  box-shadow: 0 0 0 2px var(--accent);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.stage-spot:hover {
+  background: color-mix(in oklab, var(--accent) 20%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stage-spot {
+    animation: spot 1.8s ease-out infinite;
+  }
+}
+@keyframes spot {
+  0% { box-shadow: 0 0 0 2px var(--accent), 0 0 0 0 color-mix(in oklab, var(--accent) 45%, transparent); }
+  70% { box-shadow: 0 0 0 2px var(--accent), 0 0 0 14px transparent; }
+  100% { box-shadow: 0 0 0 2px var(--accent), 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-screen { transition: none; transform: none; }
+}
