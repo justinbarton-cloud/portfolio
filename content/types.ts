@@ -76,6 +76,12 @@ export type Block =
 
 export type Case = {
   id: string
+  /**
+   * The people who did the work, by name, with what each did. A leader's
+   * case says what he set up and who carried it, so the credit sits here
+   * beside the story rather than buried in it.
+   */
+  team?: { name: string; role: string; did: string }[]
   /** The work, playable. Shown in place of the cover on the case page, and on the home page. */
   walkthrough?: Walkthrough
   /** Names the problem or the outcome, so it reads to someone with no context. */

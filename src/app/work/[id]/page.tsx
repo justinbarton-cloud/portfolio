@@ -54,6 +54,22 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
 
       <article className="mx-auto mt-16 max-w-[1240px] px-6 sm:px-10">
         {c.body ? <CaseBody blocks={c.body} /> : null}
+        {c.team?.length ? (
+          <section className="mx-auto mt-16 max-w-[40rem]">
+            <h2 className="display text-[28px] text-ink sm:text-[32px]">The team</h2>
+            <ul className="mt-6">
+              {c.team.map((m) => (
+                <li key={m.name} className="border-t border-rule py-4">
+                  <p className="text-[18px] text-ink">
+                    <span className="font-semibold">{m.name}</span>
+                    <span className="text-ink-faint">, {m.role}</span>
+                  </p>
+                  <p className="mt-1 text-[17px] leading-relaxed text-ink-soft">{m.did}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
         {c.source ? (
           <p className="mx-auto mt-12 max-w-[40rem] text-[15px] text-ink-faint">
             First published on <a href={c.source} className="underline hover:text-ink">my Webflow site</a>.
