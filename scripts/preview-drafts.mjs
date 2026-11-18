@@ -9,7 +9,7 @@
 // Nothing copied here is ever published. The Pages build keeps only cases
 // marked share: 'public', CI never has these folders, and
 // scripts/check-public.mjs fails a public build that finds public/media.
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 const root = new URL('..', import.meta.url).pathname
@@ -31,5 +31,11 @@ if (!existsSync(join(drafts, 'cases'))) {
 mkdirSync(cases, { recursive: true })
 const files = readdirSync(join(drafts, 'cases')).filter((f) => f.endsWith('.ts'))
 for (const f of files) cpSync(join(drafts, 'cases', f), join(cases, f))
+if (existsSync(join(drafts, 'reels'))) {
+  mkdirSync(join(cases, 'reels'), { recursive: true })
+  // A reel in the drafts repo imports ../types; here it sits one folder deeper.
+  for (const f of readdirSync(join(drafts, 'reels')).filter((f) => f.endsWith('.ts')))
+    writeFileSync(join(cases, 'reels', f), readFileSync(join(drafts, 'reels', f), 'utf8').replace(/from '\.\.\/types'/g, "from '../../types'"))
+}
 if (existsSync(join(drafts, 'media'))) cpSync(join(drafts, 'media'), media, { recursive: true })
 console.log(`preview: ${files.length} draft cases copied in`)

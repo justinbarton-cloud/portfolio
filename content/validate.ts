@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { about } from './about'
-import { work } from './registry.generated'
+import { reels, work } from './registry.generated'
+import { slidesOf } from './slides'
 import { contrastProblems } from './themes'
 import type { Picture } from './types'
 
@@ -38,6 +39,20 @@ export function validate() {
   }
   pic('content/about.ts photo', about.photo)
   about.home.photos.forEach((p, i) => pic(`content/about.ts home photo ${i + 1}`, p))
+
+  // A reel's slide must exist, if its case is on this build. A reel that
+  // points at a draft is fine on the public build: the slide just isn't there.
+  const cases = Object.fromEntries(work.map((w) => [w.work.id, w.work]))
+  for (const { file, reel } of reels) {
+    const where = `content/reels/${file}.ts`
+    if (reel.id !== file) fail(where, `id "${reel.id}" must match its file name`)
+    const keys = new Set(Object.values(cases).flatMap((c) => slidesOf(c).map((s) => s.key)))
+    reel.slides.forEach((s, i) => {
+      if (s.kind !== 'from') return
+      const caseId = s.key.split('/')[0]
+      if (cases[caseId] && !keys.has(s.key)) fail(where, `slide ${i + 1} points at "${s.key}", which ${caseId} doesn't have. Rebuild it in /reel/sort/`)
+    })
+  }
   contrastProblems().forEach((p) => fail('content/themes.ts', p))
   if (problems.length) throw new Error(`Content check failed:\n  ${problems.join('\n  ')}`)
 }

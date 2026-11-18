@@ -70,6 +70,26 @@ password he didn't type.
 `npm run check` (registry, build, types, dashes), then `npm run build:public`
 (the Pages build plus the leak check), and look at it with `npm run dev`.
 
+## Presenting (the reel)
+
+Every case is also a talk at `/reel/case-<id>/`, and "Present this case" on
+a case page opens it. `content/slides.ts` turns a case into slides (cover,
+walkthrough, one per section, figure, list and quote, then team and what
+changed), and a section's paragraphs become its presenter notes, so editing
+the case edits the talk.
+
+A reel file (`content/reels/<id>.ts`, or `reels/` in the drafts repo for a
+talk built on drafts) picks slides by key, `<case id>/<part>`, and can add
+its own title and context slides. Keys name a heading or a picture, never a
+position, and the build fails if a reel points at a slide its case no longer
+has.
+
+In the player: arrows, Space or a clicker move; F is full screen; P opens
+the presenter view (current and next slide, notes, a timer) in a second
+window, kept in step over a BroadcastChannel. `/reel/sort/` arranges a
+running order from every slide there is, plays it, and copies it as code to
+paste back into a reel file.
+
 ## Previewing drafts
 
 `npm run preview` copies the private drafts (cases and pictures) into the

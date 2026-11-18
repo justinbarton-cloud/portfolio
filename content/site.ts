@@ -1,6 +1,7 @@
 import { chapters } from './about'
-import { work } from './registry.generated'
-import type { Case, ChapterId } from './types'
+import { reels as reelFiles, work } from './registry.generated'
+import { buildPool, resolveReel, slidesOf, type Slide } from './slides'
+import type { Case, ChapterId, Reel } from './types'
 
 /**
  * The Pages build is the public site, so it only ever holds cases marked
@@ -40,3 +41,24 @@ export const nextCase = (id: string) => {
   const i = allCases.findIndex((c) => c.id === id)
   return allCases[(i + 1) % allCases.length]
 }
+
+// ---------------------------------------------------------------- reels
+
+/** Every slide on this build, from the cases it holds and the reels' own slides. */
+export const pool = buildPool(
+  allCases,
+  reelFiles.map((r) => r.reel),
+)
+
+/**
+ * The reels that can play here: each saved reel with at least one slide on
+ * this build (so a reel built from drafts never shows on the public site),
+ * then one for every case, made from the case itself.
+ */
+export const allReels: { id: string; title: string; slides: Slide[]; fromCase?: string }[] = [
+  ...reelFiles
+    .map(({ reel }: { reel: Reel }) => ({ id: reel.id, title: reel.title, slides: resolveReel(reel, pool.byKey) }))
+    .filter((r) => r.slides.some((s) => s.caseId)),
+  ...allCases.map((c) => ({ id: `case-${c.id}`, title: c.title, slides: slidesOf(c), fromCase: c.id })),
+]
+export const reelById = Object.fromEntries(allReels.map((r) => [r.id, r]))

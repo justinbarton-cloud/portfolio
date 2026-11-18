@@ -41,6 +41,12 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
             </div>
           ))}
         </dl>
+        <Link
+          href={`/reel/case-${c.id}/`}
+          className="rise rise-4 mt-8 inline-flex items-center gap-2 text-[16px] text-ink-soft underline decoration-rule underline-offset-4 hover:text-ink hover:decoration-accent"
+        >
+          Present this case <span aria-hidden>→</span>
+        </Link>
       </header>
 
       {c.walkthrough ? (

@@ -23,13 +23,18 @@ export function Stage({ w, label }: { w: Walkthrough; label: string }) {
   useEffect(() => {
     const el = root.current
     if (!el) return
+    // The arrows step the walkthrough while it has somewhere to go, and
+    // stop there, so inside a reel the next press moves to the next slide.
     const k = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') go(i + 1)
-      if (e.key === 'ArrowLeft') go(i - 1)
+      const to = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : null
+      if (to === null || to < 0 || to > last) return
+      e.preventDefault()
+      e.stopPropagation()
+      go(to)
     }
     el.addEventListener('keydown', k)
     return () => el.removeEventListener('keydown', k)
-  }, [i, go])
+  }, [i, go, last])
 
   return (
     <div ref={root} role="region" aria-roledescription="walkthrough" aria-label={label} className="stage">

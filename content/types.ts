@@ -112,3 +112,23 @@ export type Case = {
   /** Where it came from, when it was imported. Kept so it can be re-imported. */
   source?: string
 }
+
+/**
+ * A slide in a reel. Most slides are drawn from a case by key (see
+ * content/slides.ts), so editing the case edits its slide, and the case's own
+ * words become the presenter's notes. A title or context slide is written
+ * here, for the parts of a talk no case covers.
+ */
+export type ReelSlide =
+  | { kind: 'title'; headline: string; deck?: string; notes?: string }
+  | { kind: 'context'; eyebrow?: string; headline: string; points?: string[]; notes?: string }
+  /** A slide from a case: `<case id>/<part>`, like `scaling-platform-ux/cover`. Notes here replace the case's own. */
+  | { kind: 'from'; key: string; notes?: string }
+
+/** A talk: slides in running order. One file per reel in content/reels/. */
+export type Reel = {
+  id: string
+  /** What the talk is for, shown in the list of reels. */
+  title: string
+  slides: ReelSlide[]
+}
