@@ -12,13 +12,51 @@ export const about = {
   headline: 'I empower design teams to deliver product impact.',
   intro:
     'I create the conditions for designers to do their best work, by leading with clarity, creativity and focused energy. My teams craft product experiences that drive user value and business outcomes.',
-  bio: 'With over 20 years of experience driving design innovation, I’ve worked in environments where ideas and impact thrive. My greatest inspiration comes from home: my family and the small, meaningful moments that make life truly fulfilling.',
+  bio: 'With over 20 years of experience driving design innovation, I’ve worked in environments where ideas and impact thrive.',
   location: 'Sturbridge, Massachusetts',
   /**
-   * The only photo of Justin the site uses, anywhere. Never the Webflow
-   * site's photos. From ~/Documents/Personal/photos/profile-photo.jpg.
+   * Justin's portrait, from ~/Documents/Personal/photos/profile-photo.jpg.
+   * It replaced the older selfie on his Webflow home page.
    */
   photo: { src: '/people/justin.jpg', w: 1254, h: 1254, alt: 'Justin Barton' },
+  /**
+   * The life outside work, from the Work-life balance section of his Webflow
+   * site. No names for the kids.
+   */
+  home: {
+    heading: 'My greatest inspiration comes from home.',
+    text: 'My family and the small, meaningful moments that make life truly fulfilling.',
+    photos: [
+      {
+        src: '/people/family/home-sunset.jpg',
+        w: 756,
+        h: 1008,
+        alt: 'Justin crouching on a gravel driveway with his son and their spaniel, under an orange sunset, with the house behind them',
+        caption: 'Home, on a summer evening.',
+      },
+      {
+        src: '/people/family/truck-selfie.jpg',
+        w: 878,
+        h: 1021,
+        alt: 'A car selfie of Justin, his wife and their son, all smiling',
+        caption: 'On the road.',
+      },
+      {
+        src: '/people/family/baseball.jpg',
+        w: 998,
+        h: 998,
+        alt: 'Two of the kids laughing together at a baseball field on a sunny evening',
+        caption: 'At the ball field.',
+      },
+      {
+        src: '/people/family/wells-beach.jpg',
+        w: 998,
+        h: 998,
+        alt: 'Justin’s wife and two of the kids, arm in arm and barefoot on a beach at golden hour',
+        caption: 'Wells Beach, Maine.',
+      },
+    ],
+  },
   linkedin: 'https://www.linkedin.com/in/justinbarton/',
 
   /** Newest first. `years` is as written. */

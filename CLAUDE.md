@@ -11,8 +11,10 @@ https://justinbarton-cloud.github.io/portfolio/ on every push to main.
 - `content/work/<id>.ts`, one case per file, named for its id. The shape is
   `Case` in `content/types.ts`; its doc comments say why each field exists.
 - `content/about.ts`: bio, experience, education, testimonials, chapters.
-- `public/work/<id>/`: a case's pictures. `public/people/justin.jpg` is the
-  only photo of Justin the site uses. Never use photos from his Webflow site.
+- `public/work/<id>/`: a case's pictures. `public/people/justin.jpg` is
+  Justin's portrait (from ~/Documents/Personal/photos/profile-photo.jpg),
+  which replaced the older selfie on his Webflow home page. Family photos in
+  `public/people/family/` come from his Webflow About section and are fine.
 - `npm run import-webflow` re-imports cases from justinbarton.webflow.io. It
   won't overwrite an edited file without `--force`.
 
@@ -67,3 +69,12 @@ password he didn't type.
 
 `npm run check` (registry, build, types, dashes), then `npm run build:public`
 (the Pages build plus the leak check), and look at it with `npm run dev`.
+
+## Previewing drafts
+
+`npm run preview` copies the private drafts (cases and pictures) into the
+gitignored `content/drafts/` and `public/media/`, then starts the dev server,
+so a draft reads exactly as it will on the site, labelled "Draft, not
+public." `npm run preview:clean` takes them out again. Run it before
+`npm run build:public`, which refuses to build while draft pictures are in
+`public/media/`.

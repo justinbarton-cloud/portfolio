@@ -10,3 +10,8 @@ tsconfig.tsbuildinfo
 
 # Written before every dev, build and check run.
 content/registry.generated.ts
+
+# Private drafts, copied in by npm run preview for local review only. Never
+# committed, never published (see scripts/preview-drafts.mjs).
+content/drafts/
+public/media/

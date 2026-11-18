@@ -24,6 +24,23 @@ export default function About() {
         </div>
       </section>
 
+      <section className="mt-24 grid gap-10 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <h2 className="display text-[28px] text-ink sm:text-[32px]">{about.home.heading}</h2>
+          <p className="mt-4 text-[19px] leading-relaxed text-ink-soft">{about.home.text}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:col-span-8">
+          {about.home.photos.map((p) => (
+            <figure key={p.src}>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius)] bg-raised">
+                <Pic p={p} sizes="(min-width: 1024px) 380px, 50vw" className="absolute inset-0 h-full object-cover" />
+              </div>
+              <figcaption className="mt-2 text-[15px] text-ink-faint">{p.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
       <section className="mt-24 grid gap-12 lg:grid-cols-2">
         <div>
           <h2 className="display text-[28px] text-ink sm:text-[32px]">Experience</h2>

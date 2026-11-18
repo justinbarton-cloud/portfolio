@@ -1,7 +1,7 @@
 // Fails if the public build in out/ mentions anything that belongs inside
 // Toast: internal hosts, Slack, Google Docs, Loom, Figma files. Run after a
 // Pages build (npm run build:public does both).
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 const banned = [
@@ -28,6 +28,8 @@ const walk = (dir) => {
   }
 }
 walk('out')
+// Draft pictures copied in by npm run preview must never ship.
+for (const d of ['out/media', 'out/drafts']) if (existsSync(d)) hits.push(`${d}: draft preview files. Run npm run preview:clean, then rebuild.`)
 if (hits.length) {
   console.error(`The public build would leak ${hits.length} internal reference(s):\n` + hits.join('\n'))
   process.exit(1)

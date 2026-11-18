@@ -37,6 +37,7 @@ export function validate() {
     c.impact?.forEach((i) => i.kind === 'measured' && !i.source && fail(where, 'a measured impact needs its source'))
   }
   pic('content/about.ts photo', about.photo)
+  about.home.photos.forEach((p, i) => pic(`content/about.ts home photo ${i + 1}`, p))
   contrastProblems().forEach((p) => fail('content/themes.ts', p))
   if (problems.length) throw new Error(`Content check failed:\n  ${problems.join('\n  ')}`)
 }

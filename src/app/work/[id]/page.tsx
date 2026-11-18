@@ -21,7 +21,10 @@ export default async function CasePage({ params }: PageProps<'/work/[id]'>) {
   return (
     <main className="pt-16 sm:pt-24">
       <header className="mx-auto max-w-[1240px] px-6 sm:px-10">
-        <p className="kicker rise">{c.tags.map((t) => tagLabels[t]).join(', ')}</p>
+        <p className="kicker rise">
+          {c.share !== 'public' ? 'Draft, not public · ' : ''}
+          {c.tags.map((t) => tagLabels[t]).join(', ')}
+        </p>
         <h1 className="display rise rise-2 mt-4 max-w-[20ch] text-[40px] text-ink sm:text-[56px] lg:text-[68px]">
           {c.title}
         </h1>

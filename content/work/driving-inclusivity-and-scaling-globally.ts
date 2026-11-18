@@ -109,7 +109,7 @@ const work: Case = {
           "text": "A survey revealed high satisfaction with the pod-based model and the effectiveness of async ceremonies."
         },
         {
-          "text": "At the end of the year, my team rated me at 98% People Leader Effectiveness, reflecting strong alignment, empowerment, and inclusion."
+          "text": "In HPE's annual survey, my team rated me 94% favorable on People Leader Effectiveness, reflecting strong alignment, empowerment, and inclusion."
         }
       ]
     },
