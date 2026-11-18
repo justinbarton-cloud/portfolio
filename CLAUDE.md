@@ -44,12 +44,24 @@ presses and the theme switch. The fonts are OFL and listed in
 - Never invent a number, a quote or an outcome. Measured impact carries its
   source and date; otherwise label it expected or qualitative.
 - This repo and its site are public-safe. Nothing confidential to Toast goes
-  in it at all: no unshipped roadmap, customer research or internal metrics,
-  not even as `share: 'internal'`. Toast work only goes in once it's public
-  or cleared.
+  in it readable: no unshipped roadmap, customer research or internal
+  metrics, not even as `share: 'internal'`. Toast work only goes in once it's
+  public or cleared, or sealed into the vault.
 - The Pages build keeps only `share: 'public'` cases and fails if anything
   points inside Toast (`scripts/check-public.mjs`).
 - Name customers by first name and a description of the business only.
+
+## The vault
+
+Private work (`/private/`) holds Toast cases behind Justin's password. The
+cases live in the private drafts repo (`~/Repos/portfolio-drafts`, on Toast's
+GitHub Enterprise), marked `share: 'protected'` once Justin clears them.
+`npm run seal` asks for the password twice, encrypts each protected case and
+picture, and replaces `public/vault/` with ciphertext; commit and push to
+publish. Re-run it after any change to a protected case, with the same
+password. It refuses a password under 12 characters, any dash, and any name
+in the drafts repo's `deny.txt`. Only Justin runs it: never seal with a
+password he didn't type.
 
 ## Before pushing
 
