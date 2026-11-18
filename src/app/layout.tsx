@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { about } from '../../content/about'
+import { pageHref } from '../../content/base'
 import { validate } from '../../content/validate'
 import { SiteNav } from '../components/SiteNav'
 import { ThemeScript } from '../components/ThemeScript'
@@ -59,6 +60,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           {about.name}, {about.location}.{' '}
           <a href={about.linkedin} className="underline hover:text-ink">
             LinkedIn
+          </a>
+          <span aria-hidden> · </span>
+          <a href={pageHref('/private/')} className="underline hover:text-ink">
+            Private work
           </a>
           </div>
         </footer>

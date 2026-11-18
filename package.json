@@ -11,7 +11,8 @@
     "registry": "node scripts/registry.mjs",
     "import-webflow": "node scripts/import-webflow.mjs",
     "check": "node scripts/registry.mjs && next build && tsc --noEmit && node scripts/check-dashes.mjs",
-    "build:public": "node scripts/registry.mjs && PAGES_BASE_PATH=/portfolio next build && node scripts/check-public.mjs"
+    "build:public": "node scripts/registry.mjs && PAGES_BASE_PATH=/portfolio next build && node scripts/check-public.mjs",
+    "seal": "node scripts/seal.mjs"
   },
   "dependencies": {
     "next": "16.3.6",

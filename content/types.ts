@@ -8,7 +8,12 @@
  * internal site sits behind Toast sign-in; a public cut, built later, keeps
  * only what's marked public and fails if any of it would leak.
  */
-export type Share = 'internal' | 'public'
+/**
+ * Who can see a case. internal: only in the private drafts repo. protected:
+ * sealed into the site's vault, readable with the password. public: on the
+ * open site.
+ */
+export type Share = 'internal' | 'protected' | 'public'
 
 /** Where in the career it happened. Chapters run newest first on the page. */
 export type ChapterId = 'toast' | 'hpe' | 'earlier'
